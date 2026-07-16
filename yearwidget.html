@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  />
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+      background: transparent;
+      font-family:
+        -apple-system, BlinkMacSystemFont, "Segoe UI",
+        "Noto Sans TC", sans-serif;
+    }
+
+    .widget {
+      width: 100%;
+      max-width: 300px;
+      padding: 14px 16px;
+      background: #ffffff;
+      color: #37352f;
+      border-radius: 10px;
+    }
+
+    .year {
+      margin-bottom: 8px;
+      font-size: 18px;
+      font-weight: 700;
+    }
+
+    .status {
+      margin-bottom: 9px;
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(13, 1fr);
+      gap: 4px;
+    }
+
+    .block {
+      aspect-ratio: 1;
+      border-radius: 2px;
+      background: #e7e7e5;
+    }
+
+    .block.filled {
+      background: #37352f;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="widget">
+    <div class="year" id="year"></div>
+    <div class="status" id="status"></div>
+    <div class="grid" id="grid"></div>
+  </div>
+
+  <script>
+    function updateProgress() {
+      const now = new Date();
+      const year = now.getFullYear();
+
+      const start = new Date(year, 0, 1);
+      const end = new Date(year + 1, 0, 1);
+
+      const totalMilliseconds = end - start;
+      const passedMilliseconds = now - start;
+
+      const ratio = Math.min(
+        Math.max(passedMilliseconds / totalMilliseconds, 0),
+        1
+      );
+
+      const percent = Math.round(ratio * 100);
+      const filled = Math.floor(ratio * 52);
+
+      document.getElementById("year").textContent = year;
+      document.getElementById("status").textContent =
+        `${filled} / 52（${percent}%）`;
+
+      const grid = document.getElementById("grid");
+      grid.innerHTML = "";
+
+      for (let i = 0; i < 52; i++) {
+        const block = document.createElement("div");
+        block.className =
+          i < filled ? "block filled" : "block";
+        grid.appendChild(block);
+      }
+    }
+
+    updateProgress();
+    setInterval(updateProgress, 60 * 60 * 1000);
+  </script>
+</body>
+</html>
